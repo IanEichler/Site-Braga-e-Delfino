@@ -1,0 +1,22 @@
+BRAGA & DELFINO ADVOCACIA — CÓPIA LOCAL
+
+Esta pasta contém a versão com verde profundo, verde-lima e fonte Manrope
+sem serifa, copiada do repositório Site-Braga-e-Delfino.
+
+Para abrir novamente o servidor, execute INICIAR-LOCAL.cmd e acesse:
+http://127.0.0.1:4173
+
+Se o servidor já estiver ativo, basta abrir esse endereço no navegador.
+Para parar um servidor iniciado pelo arquivo .cmd, pressione Ctrl+C na janela.
+
+Arquivos para edição:
+dist/index.html — conteúdo e estrutura
+dist/styles.css — visual e cores
+dist/app.js — interações
+dist/assets/ — imagens e fontes
+
+O projeto não exige instalação de dependências nem compilação.
+O servidor local utiliza Python e aceita conexões somente deste computador.
+
+Repositório:
+https://github.com/IanEichler/Site-Braga-e-Delfino

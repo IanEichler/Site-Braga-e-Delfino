@@ -4,9 +4,13 @@ Site institucional do escritório Braga & Delfino Advocacia, desenvolvido em HTM
 
 A identidade visual combina **verde profundo (`#12352b`)**, **verde-lima (`#b1e580`)** e tons claros de verde-sálvia, inspirados nas referências fornecidas pelo usuário.
 
-[Visualizar o site no Sites](https://braga-delfino-advocacia.theodoroeporto.chatgpt.site/)
+A edição atual é executada localmente em [http://127.0.0.1:4173](http://127.0.0.1:4173).
+
+A composição utiliza tipografia de grande escala, fotografias em recortes orgânicos, painéis interativos para as áreas de atuação e animações de entrada, de rolagem e de hover. As animações respeitam a preferência de movimento reduzido do navegador e podem ser pausadas pelo visitante.
 
 ## Executar localmente
+
+No Windows, execute `INICIAR-LOCAL.cmd` e mantenha a janela do servidor aberta.
 
 O projeto não precisa de instalação de dependências nem de uma etapa de build. Com Python disponível, execute na raiz do repositório:
 
@@ -22,7 +26,7 @@ Abra [http://localhost:4173](http://localhost:4173) no navegador. Também é pos
 | --- | --- |
 | `dist/index.html` | Textos, estrutura da página, links e metadados |
 | `dist/styles.css` | Cores, tipografia e layout responsivo |
-| `dist/app.js` | Menu mobile, áreas expansíveis, contato e privacidade |
+| `dist/app.js` | Menu mobile, abas de atuação, animações, contato e privacidade |
 | `dist/assets/` | Imagens, favicon e fontes locais |
 | `.openai/hosting.json` | Configuração da hospedagem no Sites |
 
@@ -30,7 +34,7 @@ O contato utiliza o WhatsApp **(66) 99640-3398**, vinculado no perfil do escrit�
 
 ## Publicar
 
-Para hospedar em um serviço de sites estáticos, publique o conteúdo de `dist`. Não há comando de build. A configuração incluída em `.openai/hosting.json` aponta para o projeto existente no Sites; as permissões de acesso da hospedagem são gerenciadas nesse serviço.
+Para hospedar em um serviço de sites estáticos, publique o conteúdo de `dist`. Não há comando de build. O arquivo `.openai/hosting.json` registra a configuração histórica do projeto no Sites. A edição local não publica automaticamente nessa hospedagem.
 
 ## Fontes e créditos
 
