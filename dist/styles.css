@@ -175,8 +175,9 @@ a:focus-visible,button:focus-visible,input:focus-visible+span,[tabindex]:focus-v
 .editorial-note{margin-top:30px;color:var(--muted)}
 
 /* First contact: three light panels against the dark green */
-.process{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 0 70%,#28544291,transparent 45%),var(--deep);padding-top:110px;padding-bottom:120px}
-.process-botanical{width:970px;height:970px;left:-400px;bottom:-270px;opacity:.15;transform:rotate(20deg);z-index:-1}
+.conversation-flow{position:relative;isolation:isolate;overflow:clip;background:radial-gradient(ellipse at 0 50%,#28544291,transparent 50%),var(--deep)}
+.flow-botanical{width:1450px;height:1450px;left:-650px;bottom:-110px;opacity:.15;transform:rotate(20deg);z-index:-1}
+.process{position:relative;padding-top:110px;padding-bottom:120px}
 .process-grid{display:grid;grid-template-columns:1fr 1.13fr;gap:85px;align-items:start}
 .process-heading{position:sticky;top:170px;padding-top:24px}
 .process-heading>p:not(.eyebrow){margin-top:26px;color:#c5d8bc}
@@ -189,7 +190,7 @@ a:focus-visible,button:focus-visible,input:focus-visible+span,[tabindex]:focus-v
 .step-botanical{width:330px;height:330px;right:-150px;top:-155px;opacity:.24;stroke:#8ab361;z-index:-1;transform:rotate(-35deg)}
 
 /* Photographic contact panel and a compact three-column footer */
-.contact{background:var(--deep);padding-bottom:55px}
+.contact{padding-bottom:55px}
 .contact-panel{position:relative;isolation:isolate;overflow:hidden;border:1px solid #b1e58058;border-radius:15px;padding:63px 40px;text-align:center;background:var(--forest)}
 .contact-panel:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,#0b261fd9,#12352bdd,#0b261fd6)}
 .contact-background{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 33%;z-index:-2}
@@ -333,7 +334,7 @@ html.motion-reduced,.motion-reduced .services-track{scroll-behavior:auto}
   .process-heading>p:not(.eyebrow){margin-top:21px}
   .process-heading>p br{display:none}
   .step-card{padding:25px}
-  .process-botanical{left:-550px;bottom:0;opacity:.12}
+  .flow-botanical{left:-1100px;bottom:-150px;opacity:.12}
   .contact{padding-bottom:35px}
   .contact-panel{padding:44px 23px}
   .contact h2 br{display:none}
