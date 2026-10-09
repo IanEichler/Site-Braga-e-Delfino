@@ -8,6 +8,22 @@ A edição atual é executada localmente em [http://127.0.0.1:4173](http://127.0
 
 A composição utiliza tipografia de grande escala, fotografias em recortes orgânicos, painéis interativos para as áreas de atuação e animações de entrada, de rolagem e de hover. As animações respeitam a preferência de movimento reduzido do navegador e podem ser pausadas pelo visitante.
 
+## Padrão tipográfico
+
+A fonte Manrope segue uma escala centralizada em `dist/styles.css`. Títulos de seção compartilham o mesmo tamanho; subtítulos, textos, controles e legendas também seguem seus respectivos papéis. Os valores em `rem` respeitam o tamanho de texto padrão do navegador.
+
+| Papel | Tamanho com a base de 16 px |
+| --- | --- |
+| Título principal | 48–112 px, conforme a largura da tela |
+| Títulos de seção | 40–64 px, conforme a largura da tela |
+| Subtítulos e áreas de atuação | 24–28 px |
+| Texto de destaque | 22 px |
+| Parágrafos | 16 px |
+| Menu, links e botões | 14 px |
+| Legendas e informações auxiliares | 12 px |
+
+Para alterar o padrão, edite as variáveis `--font-*` e `--leading-*` em `:root`, em vez de definir tamanhos diferentes por seção.
+
 ## Executar localmente
 
 No Windows, execute `INICIAR-LOCAL.cmd` e mantenha a janela do servidor aberta.
