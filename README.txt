@@ -30,6 +30,8 @@ A paisagem ilustra o tema rural; não é apresentada como propriedade ou
 local de atuação do escritório.
 Fonte: Manrope, Google Fonts (SIL Open Font License).
 Títulos, textos e assinaturas tipográficas usam uma fonte sem serifa.
+Paleta visual: verde profundo (#12352b), verde-lima (#b1e580) e tons claros
+de verde-sálvia, inspirados nas referências fornecidas pelo usuário.
 
 FUNCIONAMENTO
 Os botões de WhatsApp abrem uma conversa com um texto inicial; não enviam
