@@ -6,7 +6,7 @@ A identidade visual combina **verde profundo (`#12352b`)**, **verde-lima (`#b1e5
 
 A edição atual é executada localmente em [http://127.0.0.1:4173](http://127.0.0.1:4173).
 
-A composição utiliza tipografia de grande escala, fotografias em recortes orgânicos, painéis interativos para as áreas de atuação e animações de entrada, de rolagem e de hover. As animações respeitam a preferência de movimento reduzido do navegador e podem ser pausadas pelo visitante.
+O layout segue as referências visuais fornecidas pelo usuário: menu flutuante em cápsula, hero fotográfico centralizado, carrossel de serviços, cartões claros alternados com fotografias, equipe, conteúdos, primeiros passos e painel de contato. A paleta verde e lima, a logo oficial e a tipografia sem serifa foram preservadas. As animações respeitam a preferência de movimento reduzido do navegador e podem ser pausadas pelo visitante.
 
 ## Padrão tipográfico
 
@@ -14,8 +14,8 @@ A fonte Manrope segue uma escala centralizada em `dist/styles.css`. Títulos de 
 
 | Papel | Tamanho com a base de 16 px |
 | --- | --- |
-| Título principal | 48–112 px, conforme a largura da tela |
-| Títulos de seção | 40–64 px, conforme a largura da tela |
+| Título principal | 48–72 px, conforme a largura da tela |
+| Títulos de seção | 40–56 px, conforme a largura da tela |
 | Subtítulos e áreas de atuação | 24–28 px |
 | Texto de destaque | 22 px |
 | Parágrafos | 16 px |
@@ -42,7 +42,7 @@ Abra [http://localhost:4173](http://localhost:4173) no navegador. Também é pos
 | --- | --- |
 | `dist/index.html` | Textos, estrutura da página, links e metadados |
 | `dist/styles.css` | Cores, tipografia e layout responsivo |
-| `dist/app.js` | Menu mobile, abas de atuação, animações, contato e privacidade |
+| `dist/app.js` | Menu mobile, carrossel de serviços, animações, contato e privacidade |
 | `dist/assets/` | Imagens, favicon e fontes locais |
 | `.openai/hosting.json` | Configuração da hospedagem no Sites |
 
@@ -54,6 +54,6 @@ Para hospedar em um serviço de sites estáticos, publique o conteúdo de `dist`
 
 ## Fontes e créditos
 
-O conteúdo e as imagens do escritório têm como referência o [perfil oficial no Instagram](https://www.instagram.com/bd_advocaciaa/) e o [Linktree da bio](https://linktr.ee/cpbdadvocacia). A paisagem agrícola é uma imagem ilustrativa de Matic / Unsplash. A fonte Manrope é distribuída sob a SIL Open Font License, incluída em `dist/assets/Manrope-LICENSE.txt`.
+O conteúdo e as imagens do escritório têm como referência o [perfil oficial no Instagram](https://www.instagram.com/bd_advocaciaa/) e o [Linktree da bio](https://linktr.ee/cpbdadvocacia). As fotografias de floresta, folhas, campos e arquitetura são ilustrativas; seus créditos estão em `dist/assets/FOTOGRAFIAS.md`. A paisagem agrícola original é de Matic / Unsplash. A fonte Manrope é distribuída sob a SIL Open Font License, incluída em `dist/assets/Manrope-LICENSE.txt`.
 
 Os créditos completos e as observações sobre o conteúdo estão em [README.txt](README.txt).

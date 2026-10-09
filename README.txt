@@ -8,7 +8,7 @@ Abra http://localhost:4173 no navegador.
 ARQUIVOS
 dist/index.html — conteúdo, estrutura e metadados
 dist/styles.css — identidade visual e layout responsivo
-dist/app.js — menu, abas de atuação, animações, contato e privacidade
+dist/app.js — menu, carrossel de serviços, animações, contato e privacidade
 dist/assets/ — marca, fotos e fontes locais
 .openai/hosting.json — configuração de publicação do Sites
 
@@ -23,6 +23,8 @@ Não foram adicionados endereço, número de inscrição na OAB, e-mail,
 depoimentos ou estatísticas sem confirmação.
 
 IMAGENS
+Fotografias decorativas de floresta, folhas, campos e arquitetura:
+créditos completos em dist/assets/FOTOGRAFIAS.md.
 Logotipo do cabeçalho e do rodapé: arquivo PNG fornecido pelo usuário,
 preservado em dist/assets/logo-braga-delfino.png.
 Imagens da equipe/publicações: perfil indicado pelo usuário.
@@ -36,7 +38,8 @@ Paleta visual: verde profundo (#12352b), verde-lima (#b1e580) e tons claros
 de verde-sálvia, inspirados nas referências fornecidas pelo usuário.
 
 ANIMAÇÕES
-Entradas em sequência, revelações ao rolar, órbitas, paralaxe suave e hover.
+Revelações ao rolar, linhas botânicas, paralaxe suave e hover.
+O carrossel de serviços tem controles e navegação por teclado, sem autoplay.
 O visitante pode pausar o movimento no início da página. A preferência de
 movimento reduzido do navegador também é respeitada.
 

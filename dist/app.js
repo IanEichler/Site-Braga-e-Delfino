@@ -1,135 +1,322 @@
-const menuButton = document.querySelector('.menu-toggle');
-const navigation = document.querySelector('#navegacao');
-const header = document.querySelector('.header');
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-let motionPaused = false;
-const motionToggle = document.querySelector('.motion-toggle');
-function syncMotionControl() {
-  motionToggle.hidden = reducedMotion.matches;
-  document.body.classList.toggle('motion-paused', motionPaused);
-  motionToggle.setAttribute('aria-pressed', String(motionPaused));
-  motionToggle.innerHTML = `${motionPaused ? 'Retomar animações' : 'Pausar animações'} <span aria-hidden="true">${motionPaused ? '▷' : 'Ⅱ'}</span>`;
-}
-motionToggle.addEventListener('click', () => {
-  motionPaused = !motionPaused;
-  syncMotionControl();
-});
-reducedMotion.addEventListener('change', syncMotionControl);
-syncMotionControl();
-function closeMenu() {
-  menuButton.setAttribute('aria-expanded', 'false');
-  menuButton.setAttribute('aria-label', 'Abrir menu');
-  navigation.classList.remove('is-open');
-  document.body.classList.remove('menu-open');
-}
-menuButton.addEventListener('click', () => {
-  const open = menuButton.getAttribute('aria-expanded') !== 'true';
-  menuButton.setAttribute('aria-expanded', String(open));
-  menuButton.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
-  navigation.classList.toggle('is-open', open);
-  document.body.classList.toggle('menu-open', open);
-});
-navigation.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') { closeMenu(); menuButton.focus(); }
-});
-window.matchMedia('(min-width: 721px)').addEventListener('change', event => { if (event.matches) closeMenu(); });
+(() => {
+  'use strict';
 
-const practiceTabs = [...document.querySelectorAll('.practice-tab')];
-const practicePanels = [...document.querySelectorAll('.practice-panel')];
-function selectPractice(index, focus = false) {
-  practiceTabs.forEach((tab, i) => {
-    const active = index === i;
-    tab.setAttribute('aria-selected', String(active));
-    tab.tabIndex = active ? 0 : -1;
-    tab.classList.toggle('is-active', active);
-    practicePanels[i].hidden = !active;
+  const header = document.querySelector('.header');
+  const navigation = document.querySelector('#navegacao');
+  const menuButton = document.querySelector('.menu-toggle');
+  const motionToggle = document.querySelector('.motion-toggle');
+  const hero = document.querySelector('.hero');
+  const heroVisual = hero;
+  const contact = document.querySelector('#contato');
+  const services = document.querySelector('#atuacao');
+  const floatingContact = document.querySelector('.floating-contact');
+  const scrollProgress = document.querySelector('.scroll-progress');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const desktopMenu = window.matchMedia('(min-width: 1051px)');
+  const revealElements = [...document.querySelectorAll('.reveal')];
+  let motionPaused = false;
+  let scrollScheduled = false;
+  let revealObserver;
+
+  const motionIsReduced = () => reducedMotion.matches || motionPaused;
+
+  function listenToMediaQuery(query, callback) {
+    if (typeof query.addEventListener === 'function') {
+      query.addEventListener('change', callback);
+    } else if (typeof query.addListener === 'function') {
+      query.addListener(callback);
+    }
+  }
+
+  // A visitor can stop decorative movement without losing any content.
+  function revealAll() {
+    revealElements.forEach(element => element.classList.add('is-visible'));
+    if (revealObserver) revealObserver.disconnect();
+  }
+
+  function syncMotionControl() {
+    document.body.classList.toggle('motion-paused', motionPaused);
+    document.documentElement.classList.toggle('motion-reduced', motionIsReduced());
+    if (motionToggle) {
+      motionToggle.hidden = reducedMotion.matches;
+      motionToggle.setAttribute('aria-pressed', String(motionPaused));
+      motionToggle.innerHTML = motionPaused
+        ? 'Retomar animações <span aria-hidden="true">▷</span>'
+        : 'Pausar animações <span aria-hidden="true">Ⅱ</span>';
+    }
+    if (motionIsReduced()) {
+      revealAll();
+      if (heroVisual) heroVisual.style.setProperty('--parallax', '0px');
+    }
+    requestScrollUpdate();
+  }
+
+  if (motionToggle) {
+    motionToggle.addEventListener('click', () => {
+      motionPaused = !motionPaused;
+      syncMotionControl();
+    });
+  }
+  listenToMediaQuery(reducedMotion, syncMotionControl);
+
+  function closeMenu() {
+    if (menuButton) {
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.setAttribute('aria-label', 'Abrir menu');
+    }
+    if (navigation) navigation.classList.remove('is-open');
+    document.body.classList.remove('menu-open');
+  }
+
+  if (menuButton && navigation) {
+    menuButton.addEventListener('click', () => {
+      const open = menuButton.getAttribute('aria-expanded') !== 'true';
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+      navigation.classList.toggle('is-open', open);
+      document.body.classList.toggle('menu-open', open);
+    });
+    navigation.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && menuButton.getAttribute('aria-expanded') === 'true') {
+        closeMenu();
+        menuButton.focus();
+      }
+    });
+    document.addEventListener('click', event => {
+      if (menuButton.getAttribute('aria-expanded') !== 'true') return;
+      if (!navigation.contains(event.target) && !menuButton.contains(event.target)) closeMenu();
+    });
+  }
+  listenToMediaQuery(desktopMenu, event => {
+    if (event.matches) closeMenu();
   });
-  document.querySelector('#practice-current').textContent = String(index + 1).padStart(2, '0');
-  document.querySelector('#practice-progress').style.width = `${((index + 1) / practiceTabs.length) * 100}%`;
-  if (focus) practiceTabs[index].focus();
-}
-practiceTabs.forEach((tab, index) => {
-  tab.addEventListener('click', () => selectPractice(index));
-  tab.addEventListener('keydown', event => {
-    let next;
-    if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = (index + 1) % practiceTabs.length;
-    if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (index - 1 + practiceTabs.length) % practiceTabs.length;
-    if (event.key === 'Home') next = 0;
-    if (event.key === 'End') next = practiceTabs.length - 1;
-    if (next !== undefined) { event.preventDefault(); selectPractice(next, true); }
+
+  // The services carousel moves only when a visitor requests it.
+  const servicesTrack = document.querySelector('#services-track');
+  const previousServices = document.querySelector('[data-services-prev]');
+  const nextServices = document.querySelector('[data-services-next]');
+
+  function updateCarouselControls() {
+    if (!servicesTrack) return;
+    const maximum = Math.max(0, servicesTrack.scrollWidth - servicesTrack.clientWidth);
+    // Allow for subpixel rounding and the track's inline padding.
+    const atStart = servicesTrack.scrollLeft <= 4;
+    const atEnd = maximum <= 4 || servicesTrack.scrollLeft >= maximum - 4;
+    [[previousServices, atStart], [nextServices, atEnd]].forEach(([button, disabled]) => {
+      if (!button) return;
+      button.disabled = disabled;
+      button.setAttribute('aria-disabled', String(disabled));
+    });
+  }
+
+  function serviceStep() {
+    const card = servicesTrack && servicesTrack.querySelector('.service-card');
+    if (!servicesTrack || !card) return servicesTrack ? servicesTrack.clientWidth : 0;
+    const style = getComputedStyle(servicesTrack);
+    const gap = Number.parseFloat(style.columnGap || style.gap) || 0;
+    return card.getBoundingClientRect().width + gap;
+  }
+
+  function moveServices(direction) {
+    if (!servicesTrack) return;
+    servicesTrack.scrollBy({
+      left: direction * serviceStep(),
+      behavior: motionIsReduced() ? 'auto' : 'smooth'
+    });
+  }
+
+  if (servicesTrack) {
+    if (!servicesTrack.hasAttribute('tabindex')) servicesTrack.tabIndex = 0;
+    if (previousServices) previousServices.addEventListener('click', () => moveServices(-1));
+    if (nextServices) nextServices.addEventListener('click', () => moveServices(1));
+    servicesTrack.addEventListener('scroll', updateCarouselControls, { passive: true });
+    servicesTrack.addEventListener('keydown', event => {
+      // Links inside the track retain their normal keyboard behavior.
+      if (event.target !== servicesTrack) return;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        event.preventDefault();
+        moveServices(event.key === 'ArrowLeft' ? -1 : 1);
+      } else if (event.key === 'Home' || event.key === 'End') {
+        event.preventDefault();
+        servicesTrack.scrollTo({
+          left: event.key === 'Home' ? 0 : servicesTrack.scrollWidth - servicesTrack.clientWidth,
+          behavior: motionIsReduced() ? 'auto' : 'smooth'
+        });
+      }
+    });
+    if ('ResizeObserver' in window) {
+      const carouselResizeObserver = new ResizeObserver(updateCarouselControls);
+      carouselResizeObserver.observe(servicesTrack);
+      const firstCard = servicesTrack.querySelector('.service-card');
+      if (firstCard) carouselResizeObserver.observe(firstCard);
+    }
+    window.addEventListener('resize', updateCarouselControls);
+    updateCarouselControls();
+  }
+
+  const whatsappBase = 'https://wa.me/5566996403398';
+  const greeting = 'Olá, gostaria de falar com a equipe Braga & Delfino Advocacia.';
+  const contactWhatsapp = document.querySelector('#contact-whatsapp');
+  const contactHint = document.querySelector('#contact-hint');
+  const topicInputs = [...document.querySelectorAll('input[name="assunto"]')];
+  const whatsappUrl = topic => `${whatsappBase}?text=${encodeURIComponent(
+    topic ? `${greeting} Meu assunto é: ${topic}.` : greeting
+  )}`;
+
+  function setContactTopic(topic) {
+    if (contactWhatsapp) contactWhatsapp.href = whatsappUrl(topic);
+    if (contactHint) {
+      contactHint.textContent = topic
+        ? `Assunto: ${topic}. Você confirma o envio no WhatsApp.`
+        : 'Você confirma o envio da mensagem no WhatsApp.';
+    }
+  }
+
+  document.querySelectorAll('a[data-topic]').forEach(link => {
+    const topic = (link.dataset.topic || '').trim();
+    link.href = whatsappUrl(topic);
+    link.addEventListener('click', () => {
+      setContactTopic(topic);
+      topicInputs.forEach(input => { input.checked = input.value === topic; });
+    });
   });
-});
+  topicInputs.forEach(input => {
+    input.addEventListener('change', () => {
+      if (input.checked) setContactTopic(input.value);
+    });
+  });
+  const selectedTopic = topicInputs.find(input => input.checked);
+  setContactTopic(selectedTopic ? selectedTopic.value : '');
 
-const whatsappBase = 'https://wa.me/5566996403398';
-const greeting = 'Olá, gostaria de falar com a equipe Braga & Delfino Advocacia.';
-const topicMessage = topic => `${greeting} Meu assunto é: ${topic}.`;
-document.querySelectorAll('[data-topic]').forEach(link => { link.href = `${whatsappBase}?text=${encodeURIComponent(topicMessage(link.dataset.topic))}`; });
-document.querySelectorAll('input[name="assunto"]').forEach(input => input.addEventListener('change', () => {
-  document.querySelector('#contact-whatsapp').href = `${whatsappBase}?text=${encodeURIComponent(topicMessage(input.value))}`;
-  document.querySelector('#contact-hint').textContent = `Assunto: ${input.value}. Você confirma o envio no WhatsApp.`;
-}));
+  const privacyDialog = document.querySelector('#privacy-dialog');
+  const openPrivacy = document.querySelector('#open-privacy');
+  if (privacyDialog) {
+    if (openPrivacy) {
+      openPrivacy.addEventListener('click', () => {
+        if (!privacyDialog.open && typeof privacyDialog.showModal === 'function') {
+          privacyDialog.showModal();
+        }
+      });
+    }
+    privacyDialog.querySelectorAll('.dialog-close, .dialog-confirm').forEach(button => {
+      button.addEventListener('click', () => privacyDialog.close());
+    });
+    privacyDialog.addEventListener('click', event => {
+      if (event.target !== privacyDialog) return;
+      const bounds = privacyDialog.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right
+        || event.clientY < bounds.top || event.clientY > bounds.bottom) {
+        privacyDialog.close();
+      }
+    });
+  }
+  document.querySelectorAll('[data-year]').forEach(element => {
+    element.textContent = String(new Date().getFullYear());
+  });
 
-const privacyDialog = document.querySelector('#privacy-dialog');
-document.querySelector('#open-privacy').addEventListener('click', () => privacyDialog.showModal());
-privacyDialog.querySelectorAll('.dialog-close, .dialog-confirm').forEach(button => button.addEventListener('click', () => privacyDialog.close()));
-privacyDialog.addEventListener('click', event => {
-  if (event.target !== privacyDialog) return;
-  const bounds = privacyDialog.getBoundingClientRect();
-  if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) privacyDialog.close();
-});
-document.querySelectorAll('[data-year]').forEach(element => { element.textContent = new Date().getFullYear(); });
+  if ('IntersectionObserver' in window && !reducedMotion.matches) {
+    document.body.classList.add('motion-ready');
+    revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -25px 0px' });
+    revealElements.forEach(element => revealObserver.observe(element));
+  } else {
+    revealAll();
+  }
 
-if ('IntersectionObserver' in window) {
-  document.body.classList.add('motion-ready');
-  const revealObserver = new IntersectionObserver(entries => entries.forEach(entry => {
-    if (entry.isIntersecting) { entry.target.classList.add('is-visible'); revealObserver.unobserve(entry.target); }
-  }), { threshold: 0.08, rootMargin: '0px 0px -25px 0px' });
-  document.querySelectorAll('.reveal').forEach(element => revealObserver.observe(element));
   let heroVisible = true;
   let contactVisible = false;
-  const contactObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.target.id === 'inicio') heroVisible = entry.isIntersecting;
-      if (entry.target.id === 'contato') contactVisible = entry.isIntersecting;
+  let servicesVisible = false;
+  function updateFloatingContact() {
+    if (floatingContact) floatingContact.classList.toggle('is-visible', !heroVisible && !contactVisible && !servicesVisible);
+  }
+  if ('IntersectionObserver' in window && floatingContact) {
+    const contactObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.target === hero) heroVisible = entry.isIntersecting;
+        if (entry.target === contact) contactVisible = entry.isIntersecting;
+        if (entry.target === services) servicesVisible = entry.isIntersecting;
+      });
+      updateFloatingContact();
     });
-    document.querySelector('.floating-contact').classList.toggle('is-visible', !heroVisible && !contactVisible);
-  });
-  contactObserver.observe(document.querySelector('.hero'));
-  contactObserver.observe(document.querySelector('.contact'));
-  const sectionObserver = new IntersectionObserver(entries => entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    navigation.querySelectorAll('a').forEach(link => {
-      const current = link.getAttribute('href') === `#${entry.target.id}`;
-      link.classList.toggle('is-current', current);
-      if (current) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');
-    });
-  }), { rootMargin: '-20% 0px -55% 0px', threshold: 0 });
-  document.querySelectorAll('main section[id]').forEach(section => sectionObserver.observe(section));
-}
+    if (hero) contactObserver.observe(hero);
+    else heroVisible = false;
+    if (contact) contactObserver.observe(contact);
+    if (services) contactObserver.observe(services);
+    updateFloatingContact();
+  }
 
-const scrollProgress = document.querySelector('.scroll-progress');
-const heroLandscape = document.querySelector('.hero-landscape');
-const hero = document.querySelector('.hero');
-let scrollScheduled = false;
-function updateScroll() {
-  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-  scrollProgress.style.transform = `scaleX(${scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0})`;
-  header.classList.toggle('is-scrolled', window.scrollY > 20);
-  if (!reducedMotion.matches && !motionPaused && window.scrollY < hero.offsetHeight + 120) heroLandscape.style.setProperty('--parallax', `${Math.min(window.scrollY * 0.08, 55)}px`);
-  scrollScheduled = false;
-}
-function requestScrollUpdate() { if (!scrollScheduled) { scrollScheduled = true; requestAnimationFrame(updateScroll); } }
-window.addEventListener('scroll', requestScrollUpdate, { passive: true });
-window.addEventListener('resize', requestScrollUpdate);
-reducedMotion.addEventListener('change', () => { if (reducedMotion.matches) heroLandscape.style.setProperty('--parallax', '0px'); requestScrollUpdate(); });
-requestScrollUpdate();
-document.querySelectorAll('.magnetic').forEach(link => {
-  link.addEventListener('pointermove', event => {
-    if (reducedMotion.matches || motionPaused || event.pointerType !== 'mouse') return;
-    const bounds = link.getBoundingClientRect();
-    link.style.setProperty('--magnetic-x', `${((event.clientX - bounds.left) / bounds.width - .5) * 10}px`);
-    link.style.setProperty('--magnetic-y', `${((event.clientY - bounds.top) / bounds.height - .5) * 8}px`);
+  const sectionIds = new Set(['inicio', 'atuacao', 'escritorio', 'equipe', 'conteudos', 'processo', 'contato']);
+  const sectionLinks = navigation
+    ? [...navigation.querySelectorAll('a[href^="#"]')].map(link => {
+      const id = link.getAttribute('href').slice(1);
+      return { link, section: sectionIds.has(id) ? document.getElementById(id) : null };
+    }).filter(item => item.section)
+    : [];
+
+  function updateNavigation() {
+    const offset = (header ? header.getBoundingClientRect().height : 0) + window.innerHeight * 0.2;
+    let currentSection = null;
+    let nearestTop = -Infinity;
+    sectionLinks.forEach(({ section }) => {
+      const top = section.getBoundingClientRect().top;
+      if (top <= offset && top > nearestTop) {
+        nearestTop = top;
+        currentSection = section;
+      }
+    });
+    sectionLinks.forEach(({ link, section }) => {
+      const current = section === currentSection;
+      link.classList.toggle('is-current', current);
+      if (current) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }
+
+  function updateScroll() {
+    scrollScheduled = false;
+    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollable > 0 ? Math.max(0, Math.min(window.scrollY / scrollable, 1)) : 0;
+    if (scrollProgress) scrollProgress.style.transform = `scaleX(${progress})`;
+    if (header) header.classList.toggle('is-scrolled', window.scrollY > 20);
+    if (hero && heroVisual) {
+      const bounds = hero.getBoundingClientRect();
+      const parallax = !motionIsReduced() && bounds.bottom > 0
+        ? Math.min(Math.max(-bounds.top, 0) * 0.04, 28)
+        : 0;
+      heroVisual.style.setProperty('--parallax', `${parallax}px`);
+    }
+    if (!('IntersectionObserver' in window)) {
+      const isVisible = element => {
+        if (!element) return false;
+        const bounds = element.getBoundingClientRect();
+        return bounds.bottom > 0 && bounds.top < window.innerHeight;
+      };
+      heroVisible = isVisible(hero);
+      contactVisible = isVisible(contact);
+      servicesVisible = isVisible(services);
+      updateFloatingContact();
+    }
+    updateNavigation();
+  }
+
+  function requestScrollUpdate() {
+    if (scrollScheduled) return;
+    scrollScheduled = true;
+    window.requestAnimationFrame(updateScroll);
+  }
+  window.addEventListener('scroll', requestScrollUpdate, { passive: true });
+  window.addEventListener('resize', requestScrollUpdate);
+  window.addEventListener('load', () => {
+    updateCarouselControls();
+    requestScrollUpdate();
   });
-  link.addEventListener('pointerleave', () => { link.style.setProperty('--magnetic-x', '0px'); link.style.setProperty('--magnetic-y', '0px'); });
-});
+  syncMotionControl();
+})();
