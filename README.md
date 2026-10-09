@@ -6,7 +6,7 @@ A identidade visual combina **verde profundo (`#12352b`)**, **verde-lima (`#b1e5
 
 A edição atual é executada localmente em [http://127.0.0.1:4173](http://127.0.0.1:4173).
 
-O layout segue as referências visuais fornecidas pelo usuário: menu flutuante em cápsula, hero fotográfico centralizado, carrossel de serviços, cartões claros alternados com fotografias, equipe, conteúdos, primeiros passos e painel de contato. A paleta verde e lima, a logo oficial e a tipografia sem serifa foram preservadas. As animações respeitam a preferência de movimento reduzido do navegador e podem ser pausadas pelo visitante.
+O layout segue as referências visuais fornecidas pelo usuário: menu flutuante em cápsula, hero fotográfico centralizado, carrossel de serviços, cartões claros alternados com fotografias, equipe, conteúdos, primeiros passos e painel de contato. A paleta verde e lima, a logo oficial e a tipografia sem serifa foram preservadas. As animações respeitam a preferência de movimento reduzido do navegador.
 
 ## Padrão tipográfico
 

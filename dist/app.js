@@ -4,7 +4,6 @@
   const header = document.querySelector('.header');
   const navigation = document.querySelector('#navegacao');
   const menuButton = document.querySelector('.menu-toggle');
-  const motionToggle = document.querySelector('.motion-toggle');
   const hero = document.querySelector('.hero');
   const heroVisual = hero;
   const contact = document.querySelector('#contato');
@@ -14,11 +13,10 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const desktopMenu = window.matchMedia('(min-width: 1051px)');
   const revealElements = [...document.querySelectorAll('.reveal')];
-  let motionPaused = false;
   let scrollScheduled = false;
   let revealObserver;
 
-  const motionIsReduced = () => reducedMotion.matches || motionPaused;
+  const motionIsReduced = () => reducedMotion.matches;
 
   function listenToMediaQuery(query, callback) {
     if (typeof query.addEventListener === 'function') {
@@ -28,22 +26,14 @@
     }
   }
 
-  // A visitor can stop decorative movement without losing any content.
+  // Reduced motion keeps all content available without decorative movement.
   function revealAll() {
     revealElements.forEach(element => element.classList.add('is-visible'));
     if (revealObserver) revealObserver.disconnect();
   }
 
-  function syncMotionControl() {
-    document.body.classList.toggle('motion-paused', motionPaused);
+  function syncMotionPreference() {
     document.documentElement.classList.toggle('motion-reduced', motionIsReduced());
-    if (motionToggle) {
-      motionToggle.hidden = reducedMotion.matches;
-      motionToggle.setAttribute('aria-pressed', String(motionPaused));
-      motionToggle.innerHTML = motionPaused
-        ? 'Retomar animações <span aria-hidden="true">▷</span>'
-        : 'Pausar animações <span aria-hidden="true">Ⅱ</span>';
-    }
     if (motionIsReduced()) {
       revealAll();
       if (heroVisual) heroVisual.style.setProperty('--parallax', '0px');
@@ -51,13 +41,7 @@
     requestScrollUpdate();
   }
 
-  if (motionToggle) {
-    motionToggle.addEventListener('click', () => {
-      motionPaused = !motionPaused;
-      syncMotionControl();
-    });
-  }
-  listenToMediaQuery(reducedMotion, syncMotionControl);
+  listenToMediaQuery(reducedMotion, syncMotionPreference);
 
   function closeMenu() {
     if (menuButton) {
@@ -318,5 +302,5 @@
     updateCarouselControls();
     requestScrollUpdate();
   });
-  syncMotionControl();
+  syncMotionPreference();
 })();

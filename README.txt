@@ -40,8 +40,7 @@ de verde-sálvia, inspirados nas referências fornecidas pelo usuário.
 ANIMAÇÕES
 Revelações ao rolar, linhas botânicas, paralaxe suave e hover.
 O carrossel de serviços tem controles e navegação por teclado, sem autoplay.
-O visitante pode pausar o movimento no início da página. A preferência de
-movimento reduzido do navegador também é respeitada.
+A preferência de movimento reduzido do navegador é respeitada.
 
 FUNCIONAMENTO
 Os botões de WhatsApp abrem uma conversa com um texto inicial; não enviam
