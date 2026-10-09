@@ -39,7 +39,8 @@ de verde-sálvia, inspirados nas referências fornecidas pelo usuário.
 
 ANIMAÇÕES
 Revelações ao rolar, linhas botânicas, paralaxe suave e hover.
-O carrossel de serviços tem controles e navegação por teclado, sem autoplay.
+O carrossel de serviços desliza automaticamente em um ciclo infinito, com pausa
+ao interagir por mouse, teclado ou toque. As teclas de seta permitem navegar.
 A preferência de movimento reduzido do navegador é respeitada.
 
 FUNCIONAMENTO

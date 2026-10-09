@@ -78,67 +78,165 @@
     if (event.matches) closeMenu();
   });
 
-  // The services carousel moves only when a visitor requests it.
+  // Three identical sets make the wrap invisible in either direction.
   const servicesTrack = document.querySelector('#services-track');
-  const previousServices = document.querySelector('[data-services-prev]');
-  const nextServices = document.querySelector('[data-services-next]');
-
-  function updateCarouselControls() {
-    if (!servicesTrack) return;
-    const maximum = Math.max(0, servicesTrack.scrollWidth - servicesTrack.clientWidth);
-    // Allow for subpixel rounding and the track's inline padding.
-    const atStart = servicesTrack.scrollLeft <= 4;
-    const atEnd = maximum <= 4 || servicesTrack.scrollLeft >= maximum - 4;
-    [[previousServices, atStart], [nextServices, atEnd]].forEach(([button, disabled]) => {
-      if (!button) return;
-      button.disabled = disabled;
-      button.setAttribute('aria-disabled', String(disabled));
-    });
-  }
-
-  function serviceStep() {
-    const card = servicesTrack && servicesTrack.querySelector('.service-card');
-    if (!servicesTrack || !card) return servicesTrack ? servicesTrack.clientWidth : 0;
-    const style = getComputedStyle(servicesTrack);
-    const gap = Number.parseFloat(style.columnGap || style.gap) || 0;
-    return card.getBoundingClientRect().width + gap;
-  }
-
-  function moveServices(direction) {
-    if (!servicesTrack) return;
-    servicesTrack.scrollBy({
-      left: direction * serviceStep(),
-      behavior: motionIsReduced() ? 'auto' : 'smooth'
-    });
-  }
-
   if (servicesTrack) {
-    if (!servicesTrack.hasAttribute('tabindex')) servicesTrack.tabIndex = 0;
-    if (previousServices) previousServices.addEventListener('click', () => moveServices(-1));
-    if (nextServices) nextServices.addEventListener('click', () => moveServices(1));
-    servicesTrack.addEventListener('scroll', updateCarouselControls, { passive: true });
-    servicesTrack.addEventListener('keydown', event => {
-      // Links inside the track retain their normal keyboard behavior.
-      if (event.target !== servicesTrack) return;
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-        event.preventDefault();
-        moveServices(event.key === 'ArrowLeft' ? -1 : 1);
-      } else if (event.key === 'Home' || event.key === 'End') {
-        event.preventDefault();
-        servicesTrack.scrollTo({
-          left: event.key === 'Home' ? 0 : servicesTrack.scrollWidth - servicesTrack.clientWidth,
-          behavior: motionIsReduced() ? 'auto' : 'smooth'
+    const originals = [...servicesTrack.querySelectorAll('.service-card')];
+    function copyCards() {
+      const fragment = document.createDocumentFragment();
+      originals.forEach(card => {
+        const copy = card.cloneNode(true);
+        copy.dataset.clone = 'true';
+        copy.setAttribute('aria-hidden', 'true');
+        copy.tabIndex = -1;
+        copy.querySelectorAll('[id]').forEach(node => node.removeAttribute('id'));
+        copy.querySelectorAll('img').forEach(image => { image.loading = 'eager'; });
+        // Mouse clicks still open the link without focusing a hidden copy.
+        copy.addEventListener('pointerdown', event => {
+          if (event.pointerType === 'mouse') event.preventDefault();
         });
-      }
-    });
-    if ('ResizeObserver' in window) {
-      const carouselResizeObserver = new ResizeObserver(updateCarouselControls);
-      carouselResizeObserver.observe(servicesTrack);
-      const firstCard = servicesTrack.querySelector('.service-card');
-      if (firstCard) carouselResizeObserver.observe(firstCard);
+        fragment.append(copy);
+      });
+      return fragment;
     }
-    window.addEventListener('resize', updateCarouselControls);
-    updateCarouselControls();
+    servicesTrack.prepend(copyCards());
+    servicesTrack.append(copyCards());
+    servicesTrack.classList.add('is-looping');
+    const cards = [...servicesTrack.querySelectorAll('.service-card')];
+    let cycle = 0;
+    let beginning = 0;
+    let position = 0;
+    let frame = 0;
+    let lastTime = 0;
+    let visible = false;
+    let hovered = false;
+    let touching = false;
+    let focused = false;
+    let manualUntil = 0;
+    let resumeTimer;
+    const speed = 30; // Pixels per second, independent of frame rate.
+    const focusedCard = () => servicesTrack.contains(document.activeElement)
+      && document.activeElement !== servicesTrack;
+
+    function wrap(value) {
+      if (!cycle) return value;
+      return beginning + ((value - beginning) % cycle + cycle) % cycle;
+    }
+    function normalize() {
+      if (focusedCard()) return;
+      const wrapped = wrap(position);
+      if (Math.abs(wrapped - position) > 1) {
+        position = wrapped;
+        servicesTrack.scrollLeft = position;
+      }
+    }
+    function canPlay() {
+      return cycle > 0 && visible && !document.hidden && !motionIsReduced()
+        && !hovered && !touching && !focused && performance.now() >= manualUntil;
+    }
+    function animate(time) {
+      frame = 0;
+      if (!canPlay()) { lastTime = 0; return; }
+      if (lastTime) position = wrap(position + speed * Math.min((time - lastTime) / 1000, .05));
+      lastTime = time;
+      servicesTrack.scrollLeft = position;
+      frame = requestAnimationFrame(animate);
+    }
+    function updatePlayback() {
+      if (!canPlay()) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        lastTime = 0;
+        return;
+      }
+      if (!frame) {
+        position = servicesTrack.scrollLeft;
+        normalize();
+        frame = requestAnimationFrame(animate);
+      }
+    }
+    function holdForInteraction() {
+      manualUntil = performance.now() + 1400;
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(updatePlayback, 1450);
+      updatePlayback();
+    }
+    function measure() {
+      const oldCycle = cycle;
+      const phase = oldCycle ? ((position - beginning) % oldCycle + oldCycle) % oldCycle / oldCycle : 0;
+      cycle = cards[originals.length * 2].getBoundingClientRect().left
+        - originals[0].getBoundingClientRect().left;
+      beginning = originals[0].getBoundingClientRect().left - cards[0].getBoundingClientRect().left;
+      position = focusedCard() ? servicesTrack.scrollLeft : beginning + phase * cycle;
+      if (!focusedCard()) servicesTrack.scrollLeft = position;
+      lastTime = 0;
+      updatePlayback();
+    }
+    servicesTrack.addEventListener('scroll', () => {
+      const actual = servicesTrack.scrollLeft;
+      if (Math.abs(actual - position) <= 2) return;
+      position = actual;
+      normalize();
+      holdForInteraction();
+    }, { passive: true });
+    servicesTrack.addEventListener('pointerenter', event => {
+      if (event.pointerType !== 'mouse') return;
+      hovered = true;
+      updatePlayback();
+    });
+    servicesTrack.addEventListener('pointerleave', () => { hovered = false; updatePlayback(); });
+    servicesTrack.addEventListener('pointerdown', () => { touching = true; holdForInteraction(); });
+    function releasePointer() {
+      if (!touching) return;
+      touching = false;
+      holdForInteraction();
+    }
+    window.addEventListener('pointerup', releasePointer);
+    window.addEventListener('pointercancel', releasePointer);
+    servicesTrack.addEventListener('wheel', holdForInteraction, { passive: true });
+    servicesTrack.addEventListener('focusin', () => { focused = true; updatePlayback(); });
+    servicesTrack.addEventListener('focusout', () => {
+      queueMicrotask(() => {
+        focused = servicesTrack.contains(document.activeElement);
+        updatePlayback();
+      });
+    });
+    servicesTrack.addEventListener('keydown', event => {
+      if (event.target !== servicesTrack) return;
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const step = cycle / originals.length;
+      position = event.key === 'Home' ? beginning
+        : event.key === 'End' ? beginning + step * (originals.length - 1)
+        : wrap(servicesTrack.scrollLeft + (event.key === 'ArrowLeft' ? -step : step));
+      servicesTrack.scrollLeft = position;
+      holdForInteraction();
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(entries => {
+        visible = entries[0].isIntersecting;
+        updatePlayback();
+      }, { threshold: .05 }).observe(servicesTrack);
+    } else {
+      const checkVisibility = () => {
+        const bounds = servicesTrack.getBoundingClientRect();
+        visible = bounds.bottom > 0 && bounds.top < window.innerHeight;
+        updatePlayback();
+      };
+      window.addEventListener('scroll', checkVisibility, { passive: true });
+      window.addEventListener('resize', checkVisibility);
+      checkVisibility();
+    }
+    if ('ResizeObserver' in window) {
+      const observer = new ResizeObserver(measure);
+      observer.observe(servicesTrack);
+      observer.observe(originals[0]);
+    }
+    window.addEventListener('resize', measure);
+    document.addEventListener('visibilitychange', updatePlayback);
+    listenToMediaQuery(reducedMotion, updatePlayback);
+    window.addEventListener('load', measure);
+    measure();
   }
 
   const whatsappBase = 'https://wa.me/5566996403398';
@@ -299,7 +397,6 @@
   window.addEventListener('scroll', requestScrollUpdate, { passive: true });
   window.addEventListener('resize', requestScrollUpdate);
   window.addEventListener('load', () => {
-    updateCarouselControls();
     requestScrollUpdate();
   });
   syncMotionPreference();

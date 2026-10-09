@@ -50,7 +50,7 @@ a:focus-visible,button:focus-visible,input:focus-visible+span,[tabindex]:focus-v
 .skip-link{position:fixed;top:-90px;left:20px;background:var(--lime);color:var(--forest);padding:12px 24px;z-index:100}
 .skip-link:focus{top:10px}
 .button,.text-link,nav a,.footer-column a,.footer-label,.privacy-link,.back-top,.topic-picker label span,.service-link,.dialog-confirm{font-size:var(--font-ui);line-height:var(--leading-ui)}
-.eyebrow,.services-bottom,.service-top,.step-number,.journal-category,.editorial-note,.contact-hint,.footer-caption,.footer-bottom,figcaption{font-size:var(--font-meta);line-height:var(--leading-meta)}
+.eyebrow,.service-top,.step-number,.journal-category,.editorial-note,.contact-hint,.footer-caption,.footer-bottom,figcaption{font-size:var(--font-meta);line-height:var(--leading-meta)}
 .lead{font-size:var(--font-lead);line-height:var(--leading-lead);letter-spacing:-.015em}
 .eyebrow{display:inline-flex;align-items:center;gap:9px;border-left:1px solid #b1e58082;padding:7px 14px;background:linear-gradient(90deg,#b1e58012,transparent);margin-bottom:19px}
 .eyebrow .icon{width:17px;height:17px;color:var(--lime)}
@@ -95,6 +95,7 @@ a:focus-visible,button:focus-visible,input:focus-visible+span,[tabindex]:focus-v
 .services-viewport{width:min(1440px,calc(100% - 48px));margin-inline:auto}
 .services-track{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(280px,24vw,330px);gap:16px;overflow:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;padding:5px 2px 12px;scroll-behavior:smooth}
 .services-track::-webkit-scrollbar{display:none}
+.services-track.is-looping{scroll-snap-type:none;scroll-behavior:auto;overflow-x:auto}
 .service-card{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;min-height:430px;padding:24px;border:1px solid #b1e5802b;border-radius:12px;scroll-snap-align:start;transition:border-color .3s,transform .4s var(--ease)}
 .service-card:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#0b261f10 0%,#0b261f35 25%,#0b261fc9 53%,#0b261ff5 83%)}
 .service-photo{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease);filter:saturate(.75)}
@@ -108,12 +109,6 @@ a:focus-visible,button:focus-visible,input:focus-visible+span,[tabindex]:focus-v
 .service-card:hover{border-color:#b1e5809c;transform:translateY(-4px)}
 .service-card:hover .service-photo{transform:scale(1.045)}
 .service-card:focus-visible{outline-offset:-5px}
-.services-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-top:24px;color:#b4caaa}
-.carousel-controls{display:flex;gap:10px}
-.carousel-controls button{display:grid;place-items:center;width:43px;height:43px;border:1px solid #b1e58059;background:transparent;color:var(--lime);border-radius:50%;transition:background .2s}
-.carousel-controls button:hover:not(:disabled){background:#b1e58016}
-.carousel-controls button:disabled{opacity:.3}
-.carousel-controls .icon{width:20px;height:20px}
 
 /* Alternating light panels and real photographs */
 .about{position:relative;isolation:isolate;overflow:hidden;padding-top:30px;padding-bottom:115px;background:radial-gradient(ellipse at 98% 40%,#2854428f,transparent 45%),var(--deep)}
@@ -307,10 +302,6 @@ html.motion-reduced,.motion-reduced .services-track{scroll-behavior:auto}
   .services-track{grid-auto-columns:min(295px,calc(100vw - 66px));gap:14px;padding-right:12px}
   .service-card{min-height:440px;padding:23px}
   .service-content h3{min-height:62px}
-  .services-bottom{align-items:flex-start;gap:20px}
-  .services-bottom>span{max-width:205px}
-  .carousel-controls{flex-shrink:0;gap:8px}
-  .carousel-controls button{width:37px;height:37px}
   .about{padding-top:0;padding-bottom:75px}
   .section-divider{margin-bottom:44px;gap:15px}
   .center-heading{margin-bottom:35px}
@@ -371,7 +362,6 @@ html.motion-reduced,.motion-reduced .services-track{scroll-behavior:auto}
   .hero-inner{width:calc(100% - 36px)}
   .hero{min-height:810px}
   .service-card{padding:21px}
-  .services-bottom>span{max-width:156px}
   .principle-card,.step-card{padding:23px}
   .journal-copy{padding:22px}
   .contact-panel{padding-inline:19px}
