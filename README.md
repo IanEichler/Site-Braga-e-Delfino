@@ -52,6 +52,19 @@ O contato utiliza o WhatsApp **(66) 99640-3398**, vinculado no perfil do escrit�
 
 Para hospedar em um serviço de sites estáticos, publique o conteúdo de `dist`. Não há comando de build. O arquivo `.openai/hosting.json` registra a configuração histórica do projeto no Sites. A edição local não publica automaticamente nessa hospedagem.
 
+### Vercel
+
+O arquivo `vercel.json` na raiz configura a publicação de `dist` como site estático, sem instalação de dependências ou build.
+
+1. Na Vercel, escolha **Add New → Project** e importe o repositório `IanEichler/Site-Braga-e-Delfino`.
+2. Mantenha **Root Directory** na raiz do repositório (`.`).
+3. Confira **Framework Preset: Other**, **Output Directory: dist**, **Build Command vazio** e **Install Command vazio**. O `vercel.json` já define esses valores.
+4. Publique com **Deploy**, usando a branch `main`.
+
+O site não precisa de variáveis de ambiente, banco de dados ou funções de servidor. As seções utilizam âncoras na própria página, sem necessidade de rewrites.
+
+Referências: [configuração por vercel.json](https://vercel.com/docs/project-configuration/vercel-json) e [configuração de build para sites estáticos](https://vercel.com/docs/builds/configure-a-build#skip-build-step).
+
 ## Fontes e créditos
 
 O conteúdo e as imagens do escritório têm como referência o [perfil oficial no Instagram](https://www.instagram.com/bd_advocaciaa/) e o [Linktree da bio](https://linktr.ee/cpbdadvocacia). As fotografias de floresta, folhas, campos e arquitetura são ilustrativas; seus créditos estão em `dist/assets/FOTOGRAFIAS.md`. A paisagem agrícola original é de Matic / Unsplash. A fonte Manrope é distribuída sob a SIL Open Font License, incluída em `dist/assets/Manrope-LICENSE.txt`.
