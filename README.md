@@ -1,6 +1,6 @@
 # Braga & Delfino Advocacia
 
-Site institucional do escritório Braga & Delfino Advocacia, desenvolvido em HTML, CSS e JavaScript. O layout é responsivo e utiliza **Manrope, uma fonte sem serifa**, em títulos, textos e assinaturas tipográficas.
+Site institucional do escritório Braga & Delfino Advocacia, desenvolvido em HTML, CSS e JavaScript. O layout é responsivo e utiliza **Manrope, uma fonte sem serifa**, em títulos e textos. O cabeçalho e o rodapé exibem o logotipo fornecido pelo usuário, preservado no arquivo original.
 
 A identidade visual combina **verde profundo (`#12352b`)**, **verde-lima (`#b1e580`)** e tons claros de verde-sálvia, inspirados nas referências fornecidas pelo usuário.
 

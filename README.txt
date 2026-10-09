@@ -23,13 +23,15 @@ Não foram adicionados endereço, número de inscrição na OAB, e-mail,
 depoimentos ou estatísticas sem confirmação.
 
 IMAGENS
-Marca e imagens da equipe/publicações: perfil indicado pelo usuário.
+Logotipo do cabeçalho e do rodapé: arquivo PNG fornecido pelo usuário,
+preservado em dist/assets/logo-braga-delfino.png.
+Imagens da equipe/publicações: perfil indicado pelo usuário.
 Paisagem agrícola ilustrativa: Matic / Unsplash, licença Unsplash.
 https://unsplash.com/photos/an-aerial-view-of-a-farm-field-at-sunset-k7oTr6QeaTE
 A paisagem ilustra o tema rural; não é apresentada como propriedade ou
 local de atuação do escritório.
 Fonte: Manrope, Google Fonts (SIL Open Font License).
-Títulos, textos e assinaturas tipográficas usam uma fonte sem serifa.
+Títulos e textos usam uma fonte sem serifa. A logo mantém a arte original.
 Paleta visual: verde profundo (#12352b), verde-lima (#b1e580) e tons claros
 de verde-sálvia, inspirados nas referências fornecidas pelo usuário.
 
