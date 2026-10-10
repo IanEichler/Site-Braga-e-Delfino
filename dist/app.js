@@ -273,6 +273,18 @@
   const selectedTopic = topicInputs.find(input => input.checked);
   setContactTopic(selectedTopic ? selectedTopic.value : '');
 
+  const demoDialog = document.querySelector('#demo-dialog');
+  if (demoDialog && typeof demoDialog.showModal === 'function') {
+    demoDialog.querySelectorAll('.dialog-close, .demo-confirm').forEach(button => {
+      button.addEventListener('click', () => demoDialog.close());
+    });
+    demoDialog.addEventListener('close', () => {
+      document.body.classList.remove('dialog-open');
+    });
+    document.body.classList.add('dialog-open');
+    demoDialog.showModal();
+  }
+
   const privacyDialog = document.querySelector('#privacy-dialog');
   const openPrivacy = document.querySelector('#open-privacy');
   if (privacyDialog) {

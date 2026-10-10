@@ -27,6 +27,7 @@
 html{scroll-behavior:smooth;scroll-padding-top:128px}
 body{margin:0;background:var(--deep);color:var(--paper);font:var(--font-body)/var(--leading-body) var(--sans);-webkit-font-smoothing:antialiased}
 body.menu-open{overflow:hidden}
+body.dialog-open{overflow:hidden}
 a{color:inherit;text-decoration:none}
 button,input{font:inherit}
 button{cursor:pointer;color:inherit}
@@ -225,6 +226,19 @@ dialog h2{margin-bottom:23px}
 dialog p{color:var(--muted);margin-bottom:17px}
 .dialog-close{position:absolute;right:20px;top:10px;background:none;border:0;font-size:var(--font-title)}
 .dialog-confirm{margin-top:7px;border:0;border-radius:30px;padding:13px 25px;background:var(--forest);color:var(--paper)}
+.demo-dialog{background:linear-gradient(145deg,#b1e5800d,transparent 65%),var(--deep);color:var(--paper);box-shadow:0 24px 80px #0005}
+.demo-dialog :focus-visible{outline-color:var(--lime)}
+.demo-dialog h2{margin-bottom:24px}
+.demo-dialog h2:focus{outline:none}
+.demo-mark{display:grid;place-items:center;width:52px;height:52px;margin-bottom:24px;border:1px solid #b1e58066;border-radius:50%;color:var(--lime)}
+.demo-mark .icon{width:32px;height:32px}
+.demo-dialog p{color:#d0decf}
+.demo-dialog strong{color:var(--paper);font-weight:600}
+.demo-rights{margin:24px 0 20px;padding-top:22px;border-top:1px solid #b1e58040}
+.demo-rights p:first-child{margin-bottom:8px}
+.demo-rights p:last-child{margin-bottom:0}
+.demo-dialog .demo-credit{font-size:var(--font-meta);line-height:var(--leading-meta);color:#abc0ad;margin-bottom:24px}
+.demo-confirm{width:100%;border:0}
 
 @keyframes botanicalDrift{50%{translate:0 16px}}
 @keyframes heroReveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
